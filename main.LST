@@ -1,0 +1,164 @@
+C51 COMPILER V9.01   MAIN                                                                  12/22/2016 11:21:11 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          //
+   2          //  main.c
+   3          //  IntelliCar
+   4          //
+   5          //  Created by Shi Yu on 2016/12/20.
+   6          //  Copyright ? 2016Äê Shi Yu. All rights reserved.
+   7          //
+   8          
+   9          #include <at89x52.h>
+  10          #include "car.h"
+  11          #include "timers.h"
+  12          #include "echo.h"
+  13          
+  14          extern void turnLeft(unsigned int ls, unsigned int rs);
+  15          extern void turnRight(unsigned int ls, unsigned int rs);
+  16          extern void goForward(unsigned int s);
+  17          extern void goBackward(unsigned int s);
+  18          
+  19          extern void setupTimers(void);
+  20          extern void trigger(void);
+  21          extern void calcDistance(void);
+  22          
+  23          extern unsigned long echoDistance;
+  24          extern unsigned int countEcho;
+  25          
+  26          #define TURN_TIME  25000
+  27          
+  28          void delay(unsigned int t) {
+  29   1              int i = 0, j = 0;
+  30   1              for(i = 0; i < t; ++i)
+  31   1                      for(j = 0; j < 2000; ++j);
+  32   1      }
+  33          
+  34          void main(void) {
+  35   1          
+  36   1              unsigned char state = 0;
+  37   1              unsigned int turnCounter = TURN_TIME;
+  38   1              unsigned long lastDistance = 0;
+  39   1              unsigned int defaultCount = 0;
+  40   1              
+  41   1          setupTimers();
+  42   1          
+  43   1          while(1) {
+  44   2                              
+  45   2                              //if(state == 0) {      
+  46   2                                      if(countEcho >= 1000) {
+  47   3                                              //countEcho = 0;
+  48   3                                              trigger();
+  49   3                                      calcDistance();          
+  50   3                                      if(echoDistance <= 6) {
+  51   4                                          if(LEFT_LED == 1 && RIGHT_LED == 1) {
+  52   5                                                              if(defaultCount % 2 == 0) {
+  53   6                                                      turnRight(5, 5);
+  54   6                                                                      delay(28);
+  55   6                                                              }
+C51 COMPILER V9.01   MAIN                                                                  12/22/2016 11:21:11 PAGE 2   
+
+  56   5                                                              else {
+  57   6                                                                      turnLeft(5, 5);
+  58   6                                                                      delay(30);
+  59   6                                                              } 
+  60   5                                                              ++defaultCount;
+  61   5                                          }
+  62   4                                          else if(LEFT_LED == 1 && RIGHT_LED == 0) {
+  63   5                                                              //turnCounter = TURN_TIME;
+  64   5                                                              //state = 1;
+  65   5                                              turnLeft(5, 5);
+  66   5                                                              delay(30);
+  67   5                                          }
+  68   4                                          else if(LEFT_LED == 0 && RIGHT_LED == 1) {
+  69   5                                                              //turnCounter = TURN_TIME;
+  70   5                                                              //state = 1;
+  71   5                                              turnRight(5, 5);
+  72   5                                                              delay(28);
+  73   5                                                              /*if(rightCount > 0) {
+  74   5                                                                      ++rightCount;
+  75   5                                                              }*/
+  76   5                                          }
+  77   4                                          else {
+  78   5                                                              //turnCounter = TURN_TIME;
+  79   5                                                              //state = 1;
+  80   5                                                              while(LEFT_LED == 0 && RIGHT_LED == 0) {
+  81   6                                                      goBackward(2);
+  82   6                                                              }
+  83   5                                          }
+  84   4                                      }
+  85   3                                              else {
+  86   4                                                      /*if(LEFT_LED == 1 && RIGHT_LED == 0) {
+  87   4                                                              turnLeft(5, 5);
+  88   4                                                              delay(2);
+  89   4                                                      }
+  90   4                                                      else if(LEFT_LED == 0 && RIGHT_LED == 1) {
+  91   4                                                              turnRight(5, 5);
+  92   4                                                              delay(2);
+  93   4                                                      }
+  94   4                                                      else {*/
+  95   4                                              goForward(2);
+  96   4                                                      //}
+  97   4                                              }
+  98   3                                      //else {
+  99   3                                              /*      if(lastDistance == echoDistance)        {
+ 100   3                                                              if(LEFT_LED == 1 && RIGHT_LED == 0) {
+ 101   3                                                                      turnLeft(5, 5);
+ 102   3                                                              }
+ 103   3                                                              else if(LEFT_LED == 0 && RIGHT_LED == 1) {
+ 104   3                                                                      turnRight(5, 5);
+ 105   3                                                              }       
+ 106   3                                                              else if(LEFT_LED == 0 && RIGHT_LED == 0) {
+ 107   3                                                                      goBackward(2);
+ 108   3                                                              }
+ 109   3                                                              else {
+ 110   3                                                                      goForward(2);
+ 111   3                                                              }
+ 112   3                                                      }
+ 113   3                                                      else {
+ 114   3                                                              goForward(2);
+ 115   3                                                      }*/
+ 116   3                                      }
+ 117   2                                              lastDistance = echoDistance;
+C51 COMPILER V9.01   MAIN                                                                  12/22/2016 11:21:11 PAGE 3   
+
+ 118   2                                      }
+ 119   1                              /*}
+ 120   1                              else if(state == 1) {
+ 121   1                                      if(LEFT_LED == 0 && RIGHT_LED == 0) {
+ 122   1                                              goBackward(3);
+ 123   1                                      }
+ 124   1                                      else if(LEFT_LED == 1 && RIGHT_LED == 0) {
+ 125   1                                      turnLeft(5, 5);
+ 126   1                                  }
+ 127   1                                  else if(LEFT_LED == 0 && RIGHT_LED == 1) {
+ 128   1                                      turnRight(5, 5);
+ 129   1                                  }
+ 130   1                                      --turnCounter;
+ 131   1                                      if(turnCounter == 0) {
+ 132   1                                              state = 0;
+ 133   1                                      }
+ 134   1                              }*/
+ 135   1                      
+ 136   1          
+ 137   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    834    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     38       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
