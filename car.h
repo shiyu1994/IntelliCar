@@ -71,6 +71,20 @@ void rightMotorForward(void) {
     RIGHT_BACK_MOTOR_BACKWARD = 0;
 }
 
+void leftMotorStop(void) {
+    LEFT_FRONT_MOTOR_FORWARD = 0;
+    LEFT_BACK_MOTOR_FORWARD = 0;
+	LEFT_FRONT_MOTOR_BACKWARD = 0;
+	LEFT_BACK_MOTOR_BACKWARD = 0;
+}
+
+void rightMotorStop(void) {
+    RIGHT_FRONT_MOTOR_FORWARD = 0;
+    RIGHT_BACK_MOTOR_FORWARD = 0;
+    RIGHT_FRONT_MOTOR_BACKWARD = 0;
+    RIGHT_BACK_MOTOR_BACKWARD = 0;
+}
+
 void turnLeft(unsigned int ls, unsigned int rs) {
     leftSpeed = ls;
     rightSpeed = rs;
@@ -83,6 +97,18 @@ void turnRight(unsigned int ls, unsigned int rs) {
     rightSpeed = rs;
     rightMotorBackward();
     leftMotorForward();
+}
+
+void goRight(unsigned int s) {
+	leftSpeed = s;
+	leftMotorForward();
+	rightMotorStop();
+}
+
+void goLeft(unsigned int s) {
+	rightSpeed = s;
+	leftMotorStop();
+	rightMotorForward();
 }
 
 void goForward(unsigned int s) {

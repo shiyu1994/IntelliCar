@@ -1,4 +1,4 @@
-C51 COMPILER V9.01   MAIN                                                                  12/22/2016 11:21:11 PAGE 1   
+C51 COMPILER V9.01   MAIN                                                                  12/24/2016 20:03:53 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
@@ -28,134 +28,240 @@ line level    source
   19          extern void setupTimers(void);
   20          extern void trigger(void);
   21          extern void calcDistance(void);
-  22          
-  23          extern unsigned long echoDistance;
-  24          extern unsigned int countEcho;
-  25          
-  26          #define TURN_TIME  25000
-  27          
-  28          void delay(unsigned int t) {
-  29   1              int i = 0, j = 0;
-  30   1              for(i = 0; i < t; ++i)
-  31   1                      for(j = 0; j < 2000; ++j);
-  32   1      }
-  33          
-  34          void main(void) {
-  35   1          
-  36   1              unsigned char state = 0;
-  37   1              unsigned int turnCounter = TURN_TIME;
-  38   1              unsigned long lastDistance = 0;
-  39   1              unsigned int defaultCount = 0;
-  40   1              
-  41   1          setupTimers();
-  42   1          
-  43   1          while(1) {
-  44   2                              
-  45   2                              //if(state == 0) {      
-  46   2                                      if(countEcho >= 1000) {
-  47   3                                              //countEcho = 0;
-  48   3                                              trigger();
-  49   3                                      calcDistance();          
-  50   3                                      if(echoDistance <= 6) {
-  51   4                                          if(LEFT_LED == 1 && RIGHT_LED == 1) {
-  52   5                                                              if(defaultCount % 2 == 0) {
-  53   6                                                      turnRight(5, 5);
-  54   6                                                                      delay(28);
-  55   6                                                              }
-C51 COMPILER V9.01   MAIN                                                                  12/22/2016 11:21:11 PAGE 2   
+  22          extern void trigger2(void);
+  23          extern void calcDistance(void);
+  24          
+  25          extern unsigned long echoDistance;
+  26          extern unsigned int countEcho;
+  27          extern unsigned long echoDistance2;
+  28          extern unsigned int countEcho2;
+  29          
+  30          #define TURN_TIME  25000
+  31          #define RIGHT_TURN_DELAY 18
+  32          #define LEFT_TURN_DELAY 20
+  33          #define LEFT_TURN_LEFT_SPEED 5
+  34          #define LEFT_TURN_RIGHT_SPEED 5
+  35          #define RIGHT_TURN_LEFT_SPEED 5
+  36          #define RIGHT_TURN_RIGHT_SPEED 5
+  37          
+  38          void delay(unsigned int t) {
+  39   1              int i = 0, j = 0;
+  40   1              for(i = 0; i < t; ++i)
+  41   1                      for(j = 0; j < 2000; ++j);
+  42   1      }
+  43          
+  44          
+  45          void main(void) {
+  46   1          
+  47   1              unsigned char state = 0;
+  48   1              unsigned long lastDistance = 0;
+  49   1              unsigned char lastTurnLeft = 0;
+  50   1              unsigned int defaultCount = 0;
+  51   1              unsigned int stuckDetectionCounter = 0;
+  52   1              unsigned char trigRight = 0;
+  53   1              
+  54   1          setupTimers();
+  55   1          
+C51 COMPILER V9.01   MAIN                                                                  12/24/2016 20:03:53 PAGE 2   
 
-  56   5                                                              else {
-  57   6                                                                      turnLeft(5, 5);
-  58   6                                                                      delay(30);
-  59   6                                                              } 
-  60   5                                                              ++defaultCount;
-  61   5                                          }
-  62   4                                          else if(LEFT_LED == 1 && RIGHT_LED == 0) {
-  63   5                                                              //turnCounter = TURN_TIME;
-  64   5                                                              //state = 1;
-  65   5                                              turnLeft(5, 5);
-  66   5                                                              delay(30);
-  67   5                                          }
-  68   4                                          else if(LEFT_LED == 0 && RIGHT_LED == 1) {
-  69   5                                                              //turnCounter = TURN_TIME;
-  70   5                                                              //state = 1;
-  71   5                                              turnRight(5, 5);
-  72   5                                                              delay(28);
-  73   5                                                              /*if(rightCount > 0) {
-  74   5                                                                      ++rightCount;
-  75   5                                                              }*/
-  76   5                                          }
-  77   4                                          else {
-  78   5                                                              //turnCounter = TURN_TIME;
-  79   5                                                              //state = 1;
-  80   5                                                              while(LEFT_LED == 0 && RIGHT_LED == 0) {
-  81   6                                                      goBackward(2);
-  82   6                                                              }
-  83   5                                          }
-  84   4                                      }
-  85   3                                              else {
-  86   4                                                      /*if(LEFT_LED == 1 && RIGHT_LED == 0) {
-  87   4                                                              turnLeft(5, 5);
-  88   4                                                              delay(2);
-  89   4                                                      }
-  90   4                                                      else if(LEFT_LED == 0 && RIGHT_LED == 1) {
-  91   4                                                              turnRight(5, 5);
-  92   4                                                              delay(2);
-  93   4                                                      }
-  94   4                                                      else {*/
-  95   4                                              goForward(2);
-  96   4                                                      //}
-  97   4                                              }
-  98   3                                      //else {
-  99   3                                              /*      if(lastDistance == echoDistance)        {
- 100   3                                                              if(LEFT_LED == 1 && RIGHT_LED == 0) {
- 101   3                                                                      turnLeft(5, 5);
- 102   3                                                              }
- 103   3                                                              else if(LEFT_LED == 0 && RIGHT_LED == 1) {
- 104   3                                                                      turnRight(5, 5);
- 105   3                                                              }       
- 106   3                                                              else if(LEFT_LED == 0 && RIGHT_LED == 0) {
- 107   3                                                                      goBackward(2);
- 108   3                                                              }
- 109   3                                                              else {
- 110   3                                                                      goForward(2);
- 111   3                                                              }
- 112   3                                                      }
- 113   3                                                      else {
- 114   3                                                              goForward(2);
- 115   3                                                      }*/
- 116   3                                      }
- 117   2                                              lastDistance = echoDistance;
-C51 COMPILER V9.01   MAIN                                                                  12/22/2016 11:21:11 PAGE 3   
+  56   1          while(1) {  
+  57   2                                      if(countEcho2 >= 100) {
+  58   3                                              trigger2();
+  59   3                                              calcDistance2();
+  60   3                                      }
+  61   2                                      if(countEcho >= 200) {
+  62   3                                              ++stuckDetectionCounter;
+  63   3      
+  64   3                                              //if(trigRight == 1) {
+  65   3                                                      trigger();
+  66   3                                              calcDistance();
+  67   3                                              //      trigRight = 0;
+  68   3                                              //}
+  69   3                                              //else {
+  70   3                                      
+  71   3                                              //      trigRight = 1;
+  72   3                                              //}
+  73   3                                              
+  74   3                                              countEcho = 0;
+  75   3                                              countEcho2 = 0;
+  76   3                                                       
+  77   3                                      if(echoDistance2 <= 9) {
+  78   4                                          if(LEFT_LED == 1 && echoDistance >= 15) {
+  79   5                                                              //if(defaultCount % 2 == 1) {
+  80   5                                                      turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+  81   5                                                                      delay(RIGHT_TURN_DELAY);
+  82   5                                                              //}
+  83   5                                                              //else {
+  84   5                                                                      //turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+  85   5                                                                      //delay(LEFT_TURN_DELAY);
+  86   5                                                              //}
+  87   5                                                              //++defaultCount; 
+  88   5                                          }
+  89   4                                          else if(LEFT_LED == 1 && echoDistance < 15) {
+  90   5                                              turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+  91   5                                                              delay(LEFT_TURN_DELAY);
+  92   5                                          }
+  93   4                                          else if(LEFT_LED == 0 && echoDistance >= 15) {
+  94   5                                              turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+  95   5                                                              delay(RIGHT_TURN_DELAY);
+  96   5                                          }
+  97   4                                          else {
+  98   5                                                              while(LEFT_LED == 0 && echoDistance < 15) {
+  99   6                                                      goBackward(2);
+ 100   6                                                              }
+ 101   5                                                              if(LEFT_LED == 1 && echoDistance < 15) {
+ 102   6                                                                      turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+ 103   6                                                                      delay(LEFT_TURN_DELAY);
+ 104   6                                                              }
+ 105   5                                                              else if(LEFT_LED == 0 && echoDistance >= 15) {
+ 106   6                                                                      turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+ 107   6                                                                      delay(RIGHT_TURN_DELAY);
+ 108   6                                                              }
+ 109   5                                                              else if(LEFT_LED == 1 && echoDistance >= 15) {
+ 110   6                                                                      if(defaultCount % 2 == 0) {
+ 111   7                                                              turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+ 112   7                                                                              delay(RIGHT_TURN_DELAY);
+ 113   7                                                                      }
+ 114   6                                                                      else {
+ 115   7                                                                              turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+ 116   7                                                                              delay(LEFT_TURN_DELAY);
+ 117   7                                                                      }
+C51 COMPILER V9.01   MAIN                                                                  12/24/2016 20:03:53 PAGE 3   
 
- 118   2                                      }
- 119   1                              /*}
- 120   1                              else if(state == 1) {
- 121   1                                      if(LEFT_LED == 0 && RIGHT_LED == 0) {
- 122   1                                              goBackward(3);
- 123   1                                      }
- 124   1                                      else if(LEFT_LED == 1 && RIGHT_LED == 0) {
- 125   1                                      turnLeft(5, 5);
- 126   1                                  }
- 127   1                                  else if(LEFT_LED == 0 && RIGHT_LED == 1) {
- 128   1                                      turnRight(5, 5);
- 129   1                                  }
- 130   1                                      --turnCounter;
- 131   1                                      if(turnCounter == 0) {
- 132   1                                              state = 0;
- 133   1                                      }
- 134   1                              }*/
- 135   1                      
- 136   1          
- 137   1      }
+ 118   6                                                                      ++defaultCount;
+ 119   6                                                              }
+ 120   5                                          }
+ 121   4                                      }
+ 122   3                                              else {
+ 123   4                                                      if(echoDistance < 5) {
+ 124   5                                                              goLeft(5);
+ 125   5                                                      }
+ 126   4                                                      else if(echoDistance >= 10 && echoDistance <= 15) { 
+ 127   5                                                              goRight(5); 
+ 128   5                                                      }
+ 129   4                                                      else {
+ 130   5                                              goForward(2);
+ 131   5                                                      }
+ 132   4                                              }
+ 133   3                                              /*if(stuckDetectionCounter == 50) {
+ 134   3                                                      if(lastDistance == echoDistance) {
+ 135   3                                                              if(!lastTurnLeft) {
+ 136   3                                                                      turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+ 137   3                                                                      delay(10);
+ 138   3                                                                      lastTurnLeft = 1;
+ 139   3                                                              }                       
+ 140   3                                                              else {
+ 141   3                                                                      turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+ 142   3                                                                      delay(10);
+ 143   3                                                                      lastTurnLeft = 0;
+ 144   3                                                              }
+ 145   3                                                      }
+ 146   3                                                      lastDistance = echoDistance;    
+ 147   3                                                      stuckDetectionCounter = 0;      
+ 148   3                                              }*/
+ 149   3                                  }
+ 150   2                              }
+ 151   1                      
+ 152   1          
+ 153   1      }
+ 154          
+ 155          /*void main(void) {
+ 156              
+ 157                  unsigned char state = 0;
+ 158                  unsigned long lastDistance = 0;
+ 159                  unsigned char lastTurnLeft = 0;
+ 160                  unsigned int defaultCount = 0;
+ 161                  unsigned int stuckDetectionCounter = 0;
+ 162                  
+ 163              setupTimers();
+ 164              
+ 165              while(1) {  
+ 166                                          if(countEcho >= 1000) {
+ 167                                                  ++countEcho;
+ 168                                                  ++stuckDetectionCounter;
+ 169                                                  trigger();
+ 170                                          calcDistance();          
+ 171                                          if(echoDistance <= 6) {
+ 172                                              if(LEFT_LED == 1 && RIGHT_LED == 1) {
+ 173                                                                  if(defaultCount % 2 == 0) {
+ 174                                                          turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+ 175                                                                          delay(RIGHT_TURN_DELAY);
+ 176                                                                  }
+ 177                                                                  else {
+ 178                                                                          turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+ 179                                                                          delay(LEFT_TURN_DELAY);
+C51 COMPILER V9.01   MAIN                                                                  12/24/2016 20:03:53 PAGE 4   
 
+ 180                                                                  }
+ 181                                                                  ++defaultCount; 
+ 182                                              }
+ 183                                              else if(LEFT_LED == 1 && RIGHT_LED == 0) {
+ 184                                                  turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+ 185                                                                  delay(LEFT_TURN_DELAY);
+ 186                                              }
+ 187                                              else if(LEFT_LED == 0 && RIGHT_LED == 1) {
+ 188                                                  turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+ 189                                                                  delay(RIGHT_TURN_DELAY);
+ 190                                              }
+ 191                                              else {
+ 192                                                                  while(LEFT_LED == 0 && RIGHT_LED == 0) {
+ 193                                                          goBackward(2);
+ 194                                                                  }
+ 195                                                                  if(LEFT_LED == 1 && RIGHT_LED == 0) {
+ 196                                                                          turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+ 197                                                                          delay(LEFT_TURN_DELAY);
+ 198                                                                  }
+ 199                                                                  else if(LEFT_LED == 0 && RIGHT_LED == 1) {
+ 200                                                                          turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+ 201                                                                          delay(RIGHT_TURN_DELAY);
+ 202                                                                  }
+ 203                                                                  else if(LEFT_LED == 1 && RIGHT_LED == 1) {
+ 204                                                                          if(defaultCount % 2 == 0) {
+ 205                                                                  turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+ 206                                                                                  delay(RIGHT_TURN_DELAY);
+ 207                                                                          }
+ 208                                                                          else {
+ 209                                                                                  turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+ 210                                                                                  delay(LEFT_TURN_DELAY);
+ 211                                                                          }
+ 212                                                                          ++defaultCount;
+ 213                                                                  }
+ 214                                              }
+ 215                                          }
+ 216                                                  else {
+ 217                                              goForward(2);
+ 218                                                  }
+ 219                                                  if(stuckDetectionCounter == 50) {
+ 220                                                          if(lastDistance == echoDistance) {
+ 221                                                                  if(!lastTurnLeft) {
+ 222                                                                          turnLeft(LEFT_TURN_LEFT_SPEED, LEFT_TURN_RIGHT_SPEED);
+ 223                                                                          delay(10);
+ 224                                                                          lastTurnLeft = 1;
+ 225                                                                  }                       
+ 226                                                                  else {
+ 227                                                                          turnRight(RIGHT_TURN_LEFT_SPEED, RIGHT_TURN_RIGHT_SPEED);
+ 228                                                                          delay(10);
+ 229                                                                          lastTurnLeft = 0;
+ 230                                                                  }
+ 231                                                          }
+ 232                                                          lastDistance = echoDistance;    
+ 233                                                          stuckDetectionCounter = 0;      
+ 234                                                  }
+ 235                                      }
+ 236                                  }
+ 237                          
+ 238              
+ 239          }*/
+
+
+C51 COMPILER V9.01   MAIN                                                                  12/24/2016 20:03:53 PAGE 5   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    834    ----
+   CODE SIZE        =   1087    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =     38       9
+   DATA SIZE        =     44      11
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

@@ -172,10 +172,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>68</ColumnNumber>
+      <ColumnNumber>10</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>61</TopLine>
-      <CurrentLine>66</CurrentLine>
+      <TopLine>73</TopLine>
+      <CurrentLine>85</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -1635,33 +1635,33 @@
       <Documents>
         <Doc>
           <Name>.\main.c</Name>
-          <ColumnNumber>68</ColumnNumber>
-          <TopLine>61</TopLine>
-          <CurrentLine>66</CurrentLine>
+          <ColumnNumber>10</ColumnNumber>
+          <TopLine>73</TopLine>
+          <CurrentLine>85</CurrentLine>
         </Doc>
         <Doc>
           <Name>CAR.H</Name>
-          <ColumnNumber>38</ColumnNumber>
-          <TopLine>94</TopLine>
-          <CurrentLine>109</CurrentLine>
+          <ColumnNumber>55</ColumnNumber>
+          <TopLine>84</TopLine>
+          <CurrentLine>95</CurrentLine>
         </Doc>
         <Doc>
           <Name>TIMERS.H</Name>
-          <ColumnNumber>31</ColumnNumber>
-          <TopLine>40</TopLine>
-          <CurrentLine>60</CurrentLine>
+          <ColumnNumber>14</ColumnNumber>
+          <TopLine>43</TopLine>
+          <CurrentLine>48</CurrentLine>
         </Doc>
         <Doc>
           <Name>ECHO.H</Name>
-          <ColumnNumber>17</ColumnNumber>
-          <TopLine>18</TopLine>
-          <CurrentLine>23</CurrentLine>
+          <ColumnNumber>30</ColumnNumber>
+          <TopLine>91</TopLine>
+          <CurrentLine>106</CurrentLine>
         </Doc>
         <Doc>
           <Name>DISPLAY.H</Name>
-          <ColumnNumber>30</ColumnNumber>
-          <TopLine>14</TopLine>
-          <CurrentLine>15</CurrentLine>
+          <ColumnNumber>66</ColumnNumber>
+          <TopLine>26</TopLine>
+          <CurrentLine>26</CurrentLine>
         </Doc>
         <Doc>
           <Name>C:\KEIL\C51\INC\INTRINS.H</Name>

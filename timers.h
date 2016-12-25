@@ -19,6 +19,7 @@ void setupTimers(void);
 
 unsigned int countDisplay = 0;
 unsigned int countEcho = 0;
+unsigned int countEcho2 = 0;
 unsigned int countPWM = 0;
 
 unsigned int leftPWM = 0, rightPWM = 0;
@@ -44,6 +45,7 @@ void timer1Handler() interrupt 3 using 2 {
     TL1 = (65536 - 100) % 256;
 
 	++countEcho;
+	++countEcho2;
 	++countDisplay;
 	++countPWM;
     
